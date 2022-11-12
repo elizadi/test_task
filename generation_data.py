@@ -53,22 +53,40 @@ class Generation:
 
     # return points, w, h, rot, xmin, ymin, lim_rect_w, lim_rect_h
 
+def get_rect():
+    points, w, h, rot = gen.rect()
+    xmin, ymin, lim_rect_w, lim_rect_h, ymax = gen.rect_lim(points)
+    rect = Rectangle((points[0][0], points[0][1]), w, h, angle = rot, fc = gen.random_color())
+    lim_rect = Rectangle((xmin, ymin), lim_rect_w, lim_rect_h, angle = 0, fill = None, ec = gen.random_color())
+    return rect, lim_rect
+    
+
+def draw():
+    fig, ax = plt.subplots()
+    ax.set_facecolor(gen.random_color())
+    rect, lim_rect = get_rect()
+    ax.add_patch(rect) 
+    ax.add_patch(lim_rect)
+    plt.xlim([0, 640])
+    plt.ylim([0, 480])
+    plt.show()
+
+def save(i):
+    fig, ax = plt.subplots()
+    ax.set_facecolor(gen.random_color())
+    rect, lim_rect = get_rect()
+    ax.add_patch(rect) 
+    ax.add_patch(lim_rect)
+    plt.xlim([0, 640])
+    plt.ylim([0, 480])
+    plt.savefig(str(i) + '.png', format='png', dpi='figure', pad_inches=-1.0, bbox_inches=None)
+    plt.clf()
+    
 Height, Width, rectMin, rectMax = 480, 640, 150, 250
 
 gen = Generation(Height, Width, rectMin, rectMax)
-fig, ax = plt.subplots()
-ax.set_facecolor(gen.random_color())
 
-
-points, w, h, rot = gen.rect()
-
-xmin, ymin, lim_rect_w, lim_rect_h, ymax = gen.rect_lim(points)
-
-rect = Rectangle((points[0][0], points[0][1]), w, h, angle = rot, fc = gen.random_color())
-ax.add_patch(rect) 
-
-lim_rect = Rectangle((xmin, ymin), lim_rect_w, lim_rect_h, angle = 0, fill = None, ec = gen.random_color())
-ax.add_patch(lim_rect)
+# get_rect(ax)
 
 # ax.annotate('(x1, y1)', (points[0][0], points[0][1] - 20))
 # ax.annotate('(x2, y2)', (points[1][0], points[1][1]))
@@ -85,25 +103,11 @@ ax.add_patch(lim_rect)
 # print('h = {0}, w = {1}, rot = {2}'.format(h, w, rot))
 
 
-plt.xlim([0, 640])
-plt.ylim([0, 480])
-plt.savefig('1.png', format='png', dpi='figure')#, format = 'png')
-plt.show()
+
+# plt.savefig('1.png', format='png', dpi='figure')#, format = 'png')
+# plt.show()
 
 
 for i in range(1000):
-    ax.set_facecolor(gen.random_color())
-    
-    points, w, h, rot = gen.rect()
-
-    xmin, ymin, lim_rect_w, lim_rect_h, ymax = gen.rect_lim(points)
-
-    rect = Rectangle((points[0][0], points[0][1]), w, h, angle = rot, fc = gen.random_color())
-    ax.add_patch(rect) 
-
-    lim_rect = Rectangle((xmin, ymin), lim_rect_w, lim_rect_h, angle = 0, fill = None, ec = gen.random_color())
-    ax.add_patch(lim_rect)
-
-    plt.savefig(str(i) + '.png', format='png', dpi='figure', pad_inches=-1.0, bbox_inches=None)
+    save(i)
     i += 1
-    plt.clf()
